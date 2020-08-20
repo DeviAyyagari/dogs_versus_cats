@@ -1,11 +1,12 @@
 import os
 import cv2
+
 import numpy as np
+import pandas as pd
+
 from sklearn.model_selection import train_test_split
 
-INPUT_DIR = "/home/devi/Documents/scratchpad/dl_exp/dogs_versus_cats/data/train/"
-IMAGE_DIM = (128, 128)
-NUM_OF_CHANNELS = 3
+
 
 class DataParser:
     def __init__(self, input_dir, image_dim, num_channels):
@@ -18,7 +19,15 @@ class DataParser:
 
     def parse_labels(self, filename_list):
         return [each_name.split("/")[-1].split(".")[0] for each_name in filename_list]
-   
+    
+    def create_keras_dataframe(self, file_names):
+        column_names = ["file_name", "labels"]
+        df = pd.DataFrame(columns = column_names)
+        for index, each_file_name in enumerate(file_names):
+            df.loc[index] = pd.Series({'file_name':each_file_name.split("/")[-1], 
+                                            'labels':self.parse_labels([each_file_name])[0]})
+        return df
+
     def read_single_image(self, file_path):
         return cv2.imread(file_path)
     
