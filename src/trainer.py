@@ -9,12 +9,9 @@ matplotlib.use('Agg')
 
 import matplotlib.pyplot as plt
 
-import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-
 ROOT_DIR = "/home/devi/Documents/scratchpad/dl_exp/dogs_versus_cats/"
 INPUT_DIR = ROOT_DIR + "data/train/"
-MODEL_NAME = 'model_SGD_lr_0.001'
+MODEL_NAME = 'model_3layers_SGD_lr_0.001'
 IMAGE_DIM = (200, 200)
 NUM_OF_CHANNELS = 3
 BATCH_SIZE = 100
