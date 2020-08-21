@@ -1,12 +1,36 @@
 from model import get_model
 from data_parser import DataParser
+
 from keras.preprocessing.image import ImageDataGenerator
+from keras.callbacks import ModelCheckpoint
+import matplotlib.pyplot as plt
 
-
-INPUT_DIR = "/home/devi/Documents/scratchpad/dl_exp/dogs_versus_cats/data/train/"
-IMAGE_DIM = (128, 128)
+ROOT_DIR = "/home/devi/Documents/scratchpad/dl_exp/dogs_versus_cats/"
+INPUT_DIR = ROOT_DIR + "data/train/"
+MODEL_NAME = 'model_SGD_lr_0.001'
+IMAGE_DIM = (200, 200)
 NUM_OF_CHANNELS = 3
-BATCH_SIZE = 1
+BATCH_SIZE = 100
+
+def plot_metrics(history):
+    # summarize history for accuracy
+    plt.plot(history.history['accuracy'])
+    plt.plot(history.history['val_accuracy'])
+    plt.title('model accuracy')
+    plt.ylabel('accuracy')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'validation'], loc='upper left')
+    plt.savefig(ROOT_DIR + 'models/' + MODEL_NAME + '_acc.png')
+    plt.close()
+
+    # summarize history for loss
+    plt.plot(history.history['loss'])
+    plt.plot(history.history['val_loss'])
+    plt.title('model loss')
+    plt.ylabel('loss')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'validation'], loc='upper left')
+    plt.savefig(ROOT_DIR + 'models/' + MODEL_NAME + '_loss.png')
 
 def train():
     dp = DataParser(INPUT_DIR, IMAGE_DIM, NUM_OF_CHANNELS)
@@ -36,13 +60,17 @@ def train():
             batch_size=BATCH_SIZE,
             class_mode='binary')
     
-    model.fit(
+    checkpoint = ModelCheckpoint(ROOT_DIR + 'models/' + MODEL_NAME + '.h5', verbose=1, monitor='val_loss',save_best_only=True, mode='min')  
+
+    history = model.fit(
             train_generator,
             steps_per_epoch=len(train_generator),
-            epochs=20,
+            epochs=50,
             verbose=1,
             validation_data=validation_generator,
-            validation_steps=len(validation_generator))
+            validation_steps=len(validation_generator),
+            callbacks=[checkpoint])
+
     
 if __name__ == "__main__":
     train()
