@@ -3,7 +3,14 @@ from data_parser import DataParser
 
 from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import ModelCheckpoint
+
+import matplotlib
+matplotlib.use('Agg')
+
 import matplotlib.pyplot as plt
+
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 ROOT_DIR = "/home/devi/Documents/scratchpad/dl_exp/dogs_versus_cats/"
 INPUT_DIR = ROOT_DIR + "data/train/"
@@ -14,8 +21,9 @@ BATCH_SIZE = 100
 
 def plot_metrics(history):
     # summarize history for accuracy
-    plt.plot(history.history['accuracy'])
-    plt.plot(history.history['val_accuracy'])
+    print(history.history.keys())
+    plt.plot(history.history['acc'])
+    plt.plot(history.history['val_acc'])
     plt.title('model accuracy')
     plt.ylabel('accuracy')
     plt.xlabel('epoch')
@@ -70,7 +78,7 @@ def train():
             validation_data=validation_generator,
             validation_steps=len(validation_generator),
             callbacks=[checkpoint])
-
+    plot_metrics(history)
     
 if __name__ == "__main__":
     train()
