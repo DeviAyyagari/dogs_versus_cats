@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 
 ROOT_DIR = "/home/devi/Documents/scratchpad/dl_exp/dogs_versus_cats/"
 INPUT_DIR = ROOT_DIR + "data/train/"
-MODEL_NAME = 'model_3layers_aug_dropout_SGD_lr_0.001'
+MODEL_NAME = 'model_3layers_aug_dropout_SGD_lr_0.001_100_epochs'
 IMAGE_DIM = (200, 200)
 NUM_OF_CHANNELS = 3
 BATCH_SIZE = 100
@@ -44,7 +44,7 @@ def train():
     train_datagen = ImageDataGenerator(rescale=1./255,
                                         width_shift_range=0.1, 
                                         height_shift_range=0.1, 
-                                        horizontal_flip=True))
+                                        horizontal_flip=True)
     valid_datagen = ImageDataGenerator(rescale=1./255)
 
     train_df = dp.create_keras_dataframe(dp.train_filenames)
@@ -73,7 +73,7 @@ def train():
     history = model.fit(
             train_generator,
             steps_per_epoch=len(train_generator),
-            epochs=50,
+            epochs=100,
             verbose=1,
             validation_data=validation_generator,
             validation_steps=len(validation_generator),
